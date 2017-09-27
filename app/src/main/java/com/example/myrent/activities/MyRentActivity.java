@@ -1,10 +1,13 @@
-package com.example.myrent;
+package com.example.myrent.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+
+import com.example.myrent.R;
+import com.example.myrent.models.Residence;
 
 public class MyRentActivity extends AppCompatActivity implements TextWatcher {
 
