@@ -6,6 +6,7 @@
     android:layout_marginRight="16dp"
     android:orientation="vertical">
 
+    <!-- LOCATION SEPARATOR -->
     <TextView
         android:id="@+id/locationLabel"
         style="?android:listSeparatorTextViewStyle"
@@ -13,12 +14,14 @@
         android:layout_height="wrap_content"
         android:text="@string/location" />
 
+    <!-- Geolocation (GPS Coords) -->
     <EditText
         android:id="@+id/geolocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/geolocation_hint"/>
 
+    <!-- STATUS SEPARATOR-->
     <TextView
         android:id="@+id/statusLabel"
         style="?android:listSeparatorTextViewStyle"
@@ -30,5 +33,12 @@
         android:id="@+id/registration_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <CheckBox
+        android:id="@+id/isrented"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/isrented"
+        android:checked="false"/>
 
 </LinearLayout>
