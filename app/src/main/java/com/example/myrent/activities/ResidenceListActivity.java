@@ -8,6 +8,8 @@ import com.example.myrent.models.Residence;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -48,6 +50,13 @@ public class ResidenceListActivity extends AppCompatActivity implements AdapterV
         Intent intent = new Intent(this, ResidenceActivity.class);
         intent.putExtra("RESIDENCE_ID", residence.id);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.residencelist, menu);
+        return true;
     }
 
     @Override
