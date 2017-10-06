@@ -4,12 +4,22 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
+import static com.example.myrent.android.helpers.LogHelpers.info;
+
 public class Portfolio
 {
     public ArrayList<Residence> residences;
+    private PortfolioSerializer   serializer;
 
-    public Portfolio() {
-        residences = new ArrayList<Residence>();
+    public Portfolio(PortfolioSerializer serializer) {
+        this.serializer = serializer;
+        try {
+            residences = serializer.loadResidences();
+        }
+        catch (Exception e) {
+            info(this, "Error loading residences: " + e.getMessage());
+            residences = new ArrayList<Residence>();
+        }
     }
 
     public void addResidence(Residence residence) {
@@ -25,5 +35,17 @@ public class Portfolio
             }
         }
         return null;
+    }
+
+    public boolean saveResidences() {
+        try {
+            serializer.saveResidences(residences);
+            info(this, "Residences saved to file");
+            return true;
+        }
+        catch (Exception e) {
+            info(this, "Error saving residences: " + e.getMessage());
+            return false;
+        }
     }
 }
