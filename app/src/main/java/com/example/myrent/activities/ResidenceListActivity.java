@@ -42,8 +42,11 @@ public class ResidenceListActivity extends AppCompatActivity implements AdapterV
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        Residence residence = adapter.getItem(position);
         Intent intent = new Intent(this, ResidenceActivity.class);
+        intent.putExtra("RESIDENCE_ID", residence.id);
         startActivity(intent);
     }
 }
