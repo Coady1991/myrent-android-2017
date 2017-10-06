@@ -9,14 +9,23 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
 import android.widget.EditText;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import android.app.DatePickerDialog;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.example.myrent.R;
 import com.example.myrent.app.MyRentApp;
 import com.example.myrent.models.Portfolio;
 import com.example.myrent.models.Residence;
 
-public class ResidenceActivity extends AppCompatActivity implements TextWatcher, OnCheckedChangeListener {
+public class ResidenceActivity extends AppCompatActivity implements TextWatcher, OnCheckedChangeListener, View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private EditText  geolocation;
     private Residence residence;
@@ -34,16 +43,16 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
         geolocation.addTextChangedListener(this);
 
         dateButton  = (Button)   findViewById(R.id.registration_date);
-        dateButton.setEnabled(false);
+        dateButton.setOnClickListener(this);
 
         rented      = (CheckBox) findViewById(R.id.isrented);
         rented.setOnCheckedChangeListener(this);
 
         MyRentApp app = (MyRentApp) getApplication();
-        portfolio = app.portfolio;
+        portfolio     = app.portfolio;
 
         Long resId = (Long) getIntent().getExtras().getSerializable("RESIDENCE_ID");
-        residence = portfolio.getResidence(resId);
+        residence  = portfolio.getResidence(resId);
         if (residence != null) {
             updateControls(residence);
         }
@@ -74,5 +83,22 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         Log.i(this.getClass().getSimpleName(), "rented Checked");
         residence.rented = isChecked;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Date date = new GregorianCalendar(year, month, dayOfMonth).getTime();
+        residence.date = date.getTime();
+        dateButton.setText(residence.getDateString());
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.registration_date      : Calendar c = Calendar.getInstance();
+                DatePickerDialog dpd = new DatePickerDialog (this, this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.show();
+                break;
+        }
     }
 }
