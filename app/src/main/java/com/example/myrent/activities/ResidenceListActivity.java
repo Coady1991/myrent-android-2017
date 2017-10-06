@@ -6,9 +6,11 @@ import com.example.myrent.models.Portfolio;
 import com.example.myrent.models.Residence;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -18,7 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ResidenceListActivity extends AppCompatActivity {
+public class ResidenceListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private ListView listView;
     private Portfolio portfolio;
     private ResidenceAdapter adapter;
@@ -36,6 +38,13 @@ public class ResidenceListActivity extends AppCompatActivity {
 
         adapter = new ResidenceAdapter(this, portfolio.residences);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, ResidenceActivity.class);
+        startActivity(intent);
     }
 }
 
