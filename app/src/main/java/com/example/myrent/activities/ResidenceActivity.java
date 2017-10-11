@@ -1,5 +1,9 @@
 package com.example.myrent.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -41,6 +45,7 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
     private Button    tenantButton;
     private Button    reportButton;
     private String    emailAddress = "";
+    private Intent    data;
 
     private static final int REQUEST_CONTACT = 1;
 
@@ -130,15 +135,51 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
         portfolio.saveResidences();
     }
 
+    private void readContact() {
+        String name = getContact(this, data);
+        emailAddress = getEmail(this, data);
+        tenantButton.setText(name + " : " + emailAddress);
+        residence.tenant = name;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CONTACT:
-                String name = getContact(this, data);
-                emailAddress = getEmail(this, data);
-                tenantButton.setText(name + " : " + emailAddress);
-                residence.tenant = name;
+                this.data = data;
+                checkContactsReadPermission();
                 break;
+        }
+    }
+
+    //https://developer.android.com/training/permissions/requesting.html
+    private void checkContactsReadPermission() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            //We can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CONTACT);
+        }
+        else {
+            //We already have permission, so go head and read the contact
+            readContact();
+        }
+    }
+
+    //https://developer.android.com/training/permissions/requesting.html
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CONTACT: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    readContact();
+                }
+            }
         }
     }
 }
