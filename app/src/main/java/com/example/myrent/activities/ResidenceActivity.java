@@ -25,6 +25,11 @@ import com.example.myrent.app.MyRentApp;
 import com.example.myrent.models.Portfolio;
 import com.example.myrent.models.Residence;
 
+import static com.example.myrent.android.helpers.ContactHelper.getContact;
+import static com.example.myrent.android.helpers.ContactHelper.getEmail;
+import static com.example.myrent.android.helpers.IntentHelper.selectContact;
+import android.content.Intent;
+
 public class ResidenceActivity extends AppCompatActivity implements TextWatcher, OnCheckedChangeListener, View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private EditText  geolocation;
@@ -32,6 +37,10 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
     private CheckBox  rented;
     private Button    dateButton;
     private Portfolio portfolio;
+    private Button    tenantButton;
+    private String    emailAddress = "";
+
+    private static final int REQUEST_CONTACT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +65,9 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
         if (residence != null) {
             updateControls(residence);
         }
+
+        tenantButton = (Button)   findViewById(R.id.tenant);
+        tenantButton.setOnClickListener(this);
     }
 
     public void updateControls(Residence residence) {
@@ -99,6 +111,8 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
                 DatePickerDialog dpd = new DatePickerDialog (this, this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
                 dpd.show();
                 break;
+            case R.id.tenant : selectContact(this, REQUEST_CONTACT);
+                break;
         }
     }
 
@@ -106,5 +120,17 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
     public void onPause() {
         super.onPause();
         portfolio.saveResidences();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CONTACT:
+                String name = getContact(this, data);
+                emailAddress = getEmail(this, data);
+                tenantButton.setText(name + " : " + emailAddress);
+                residence.tenant = name;
+                break;
+        }
     }
 }
