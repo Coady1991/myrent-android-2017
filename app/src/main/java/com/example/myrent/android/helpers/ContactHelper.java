@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.content.ContentResolver;
+import android.widget.Toast;
 
 
 public class ContactHelper {
@@ -48,6 +49,7 @@ public class ContactHelper {
                 emails.close();
             }
             catch (Exception e) {
+                Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
             }
         }
         return email;
