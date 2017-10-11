@@ -28,6 +28,7 @@ import com.example.myrent.models.Residence;
 import static com.example.myrent.android.helpers.ContactHelper.getContact;
 import static com.example.myrent.android.helpers.ContactHelper.getEmail;
 import static com.example.myrent.android.helpers.IntentHelper.selectContact;
+import static com.example.myrent.android.helpers.ContactHelper.sendEmail;
 import android.content.Intent;
 
 public class ResidenceActivity extends AppCompatActivity implements TextWatcher, OnCheckedChangeListener, View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -38,6 +39,7 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
     private Button    dateButton;
     private Portfolio portfolio;
     private Button    tenantButton;
+    private Button    reportButton;
     private String    emailAddress = "";
 
     private static final int REQUEST_CONTACT = 1;
@@ -68,6 +70,8 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
 
         tenantButton = (Button)   findViewById(R.id.tenant);
         tenantButton.setOnClickListener(this);
+        reportButton = (Button)   findViewById(R.id.residence_reportButton);
+        reportButton.setOnClickListener(this);
     }
 
     public void updateControls(Residence residence) {
@@ -112,6 +116,10 @@ public class ResidenceActivity extends AppCompatActivity implements TextWatcher,
                 dpd.show();
                 break;
             case R.id.tenant : selectContact(this, REQUEST_CONTACT);
+                break;
+            case R.id.residence_reportButton :
+                sendEmail(this, emailAddress,
+                        getString(R.string.residence_report_subject), residence.getResidenceReport(this));
                 break;
         }
     }
